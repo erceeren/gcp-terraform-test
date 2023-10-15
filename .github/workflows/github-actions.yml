@@ -1,0 +1,17 @@
+name: Test action for CI/CD with terraform
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  push:
+    branches: ["main"]
+jobs:
+  run-terraform:
+    name: Run terraform changes
+    runs-on: ubuntu-latest
+    steps:
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+            create_credentials_file: true
+            workload_identity_provider: 'projects/shooter-game-400216/locations/global/workloadIdentityPools/ci-cd/providers/github'
+            service_account: 'ci-cd-service@shooter-game-400216.iam.gserviceaccount.com'
