@@ -7,8 +7,15 @@ terraform {
   }
 }
 
+terraform {
+  backend "gcs" {
+    bucket = "shooter-terraform-backend"
+    prefix = "prod"
+  }
+}
+
 provider "google" {
-  project = "test-402112"
+  project = "shooter-game-400216"
   region  = "europe-west2"
 }
 
