@@ -1,2 +1,4 @@
 .terraform/
 .terraform*
+token
+id_rsa*

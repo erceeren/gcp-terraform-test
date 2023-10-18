@@ -19,13 +19,26 @@ provider "google" {
   region  = "europe-west2"
 }
 
-
-resource "google_service_account" "default" {
-  account_id   = "my-custom-sa"
-  display_name = "Custom SA for VM Instance"
+variable "ssh_user" {
+  default = "ssh_user"
 }
 
-resource "google_compute_instance" "default" {
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+output "private_key" {
+  value     = tls_private_key.ssh_key.private_key_pem
+  sensitive = true
+}
+
+output "public_key" {
+  value     = tls_private_key.ssh_key.public_key_openssh
+  sensitive = true
+}
+
+resource "google_compute_instance" "my_instance" {
   name         = "test-instance"
   machine_type = "n2-standard-2"
   zone         = "europe-west2-a"
@@ -49,10 +62,13 @@ resource "google_compute_instance" "default" {
     }
   }
 
-  service_account {
-    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
-    email  = google_service_account.default.email
-    scopes = ["cloud-platform"]
+  metadata = {
+    ssh-keys               = "${var.ssh_user}:${tls_private_key.ssh_key.public_key_openssh}"
+    block-project-ssh-keys = true
   }
+}
+
+output "instance_ip" {
+  value = google_compute_instance.my_instance.network_interface[0].access_config[0].nat_ip
 }
 

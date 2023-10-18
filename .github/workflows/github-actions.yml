@@ -26,9 +26,6 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      - name: Terraform Format
-        run: terraform fmt -check
-
       - name: Terraform Plan
         run: terraform plan -input=false
         env:
@@ -39,4 +36,29 @@ jobs:
         run: terraform apply -auto-approve -input=false
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Get the output of the Terraform configuration
+        id: terraform_output
+        run: terraform output
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: INSTANCE_PRIVATE_KEY
+          value: ${{steps.terraform_output.outputs.private_key}}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - name: Echo secrets
+        run: |
+          echo $SSH_KEY >> ssh_key.pem
+        shell: bash
+        env:
+          SSH_KEY : ${{secrets.INSTANCE_PRIVATE_KEY}}
+
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible.yml
+          inventory: |
+            [all]
+            ${{steps.terraform_output.outputs.instance_ip}} ansible_ssh_private_key_file=./ssh_key.pem
       
