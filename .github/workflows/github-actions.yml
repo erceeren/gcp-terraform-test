@@ -52,20 +52,23 @@ jobs:
       - name: Echo secrets
         run: |
           echo $SSH_KEY >> ssh_key.pem
-          cat ssh_key.pem
+          cat << EOT >> hosts
+          [all]
+          $INSTANCE_IP
+
+          [all:vars]
+          ansible_user=ssh_user
+          ansible_ssh_private_key_file=./ssh_key.pem
+          EOT
         shell: bash
         env:
           SSH_KEY : ${{secrets.INSTANCE_PRIVATE_KEY}}
+          INSTANCE_IP : ${{steps.terraform_output.outputs.instance_ip}}
 
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: ansible.yml
-          inventory: |
-            [all]
-            ${{steps.terraform_output.outputs.instance_ip}}
-
-            [all:vars]
-            ansible_user=ssh_user
-            ansible_ssh_private_key_file=./ssh_key.pem
+          options: |
+            --inventory hosts
       
