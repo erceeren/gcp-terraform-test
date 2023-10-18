@@ -52,6 +52,7 @@ jobs:
       - name: Echo secrets
         run: |
           echo $SSH_KEY >> ssh_key.pem
+          cat ssh_key.pem
         shell: bash
         env:
           SSH_KEY : ${{secrets.INSTANCE_PRIVATE_KEY}}
