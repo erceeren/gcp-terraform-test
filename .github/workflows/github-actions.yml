@@ -63,8 +63,9 @@ jobs:
           playbook: ansible.yml
           inventory: |
             [all]
-            ${{steps.terraform_output.outputs.instance_ip}} ansible_ssh_private_key_file=./ssh_key.pem
-            
+            ${{steps.terraform_output.outputs.instance_ip}}
+
             [all:vars]
             ansible_user=ssh_user
+            ansible_ssh_private_key_file=./ssh_key.pem
       
