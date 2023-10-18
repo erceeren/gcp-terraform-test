@@ -1,8 +1,9 @@
 ---
 - name: Network Getting Started First Playbook
-  gather_facts: false
   hosts: all
+  gather_facts: no
   tasks:
-    - name: Print message
-      ansible.builtin.debug:
-        msg: "Hello world {{ lookup('env','USER') }}"
+    - shell: ps -eo pcpu,user,args | sort -r -k1 | head -n5
+      register: ps
+
+    - debug: var=ps.stdout_lines
