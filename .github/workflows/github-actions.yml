@@ -40,6 +40,8 @@ jobs:
       - name: Get the output of the Terraform configuration
         id: terraform_output
         run: terraform output
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - uses: gliech/create-github-secret-action@v1
         with:
