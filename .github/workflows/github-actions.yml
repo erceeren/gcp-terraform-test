@@ -42,7 +42,7 @@ jobs:
       - name: Echo secrets
         run: |
           terraform output private_key > ssh_key.pem
-          export INSTANCE_IP=terraform output instance_ip
+          export INSTANCE_IP=$(terraform output instance_ip)
           envsubst < hosts > inventory
           chmod 0600 ssh_key.pem
         shell: bash
