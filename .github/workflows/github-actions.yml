@@ -56,12 +56,10 @@ jobs:
 
       - name: Echo secrets
         run: |
-          INSTANCE_PRIVATE_KEY=$(terraform output private_key)
-          INSTANCE_IP=$(terraform output instance_ip)
-          echo $INSTANCE_PRIVATE_KEY >> ssh_key.pem
+          terraform output private_key > a.txt
           echo "" >> ssh_key.pem
           echo "[all]" >> hosts
-          echo $INSTANCE_IP >> hosts
+          echo $(terraform output instance_ip) >> hosts
           echo "" >> hosts
           echo "[all:vars]" >> hosts
           echo "ansible_user=ssh_user" >> hosts
