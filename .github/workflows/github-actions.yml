@@ -20,6 +20,8 @@ jobs:
             service_account: 'ci-cd-service@shooter-game-400216.iam.gserviceaccount.com'
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init
