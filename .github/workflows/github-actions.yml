@@ -60,14 +60,12 @@ jobs:
           INSTANCE_IP=$(terraform output instance_ip)
           echo $INSTANCE_PRIVATE_KEY >> ssh_key.pem
           echo "" >> ssh_key.pem
-          cat << EOF > hosts
-          [all]
-          $INSTANCE_IP
-
-          [all:vars]
-          ansible_user=ssh_user
-          ansible_ssh_private_key_file=ssh_key.pem
-          EOF
+          echo "[all]" >> hosts
+          echo $INSTANCE_IP >> hosts
+          echo "" >> hosts
+          echo "[all:vars]" >> hosts
+          echo "ansible_user=ssh_user" >> hosts
+          echo "ansible_ssh_private_key_file=ssh_key.pem" >> hosts
           chmod 0600 ssh_key.pem
         shell: bash
         env:
