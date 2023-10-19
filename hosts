@@ -1,0 +1,6 @@
+[all]
+35.246.102.226
+
+[all:vars]
+ansible_user=ssh_user
+ansible_ssh_private_key_file=./id_rsa.pem
