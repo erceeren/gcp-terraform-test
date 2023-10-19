@@ -57,10 +57,9 @@ jobs:
       - name: Echo secrets
         run: |
           INSTANCE_PRIVATE_KEY=$(terraform output private_key)
-          INSTANCE_PUBLIC_KEY=$(terraform output public_key)
           INSTANCE_IP=$(terraform output instance_ip)
           echo $INSTANCE_PRIVATE_KEY >> ssh_key.pem
-          echo $INSTANCE_PUBLIC_KEY >> ssh_key.pem.pub
+          echo "" >> ssh_key.pem
           cat << EOF > hosts
           [all]
           $INSTANCE_IP
@@ -70,7 +69,6 @@ jobs:
           ansible_ssh_private_key_file=ssh_key.pem
           EOF
           chmod 0600 ssh_key.pem
-          chmod 0600 ssh_key.pem.pub
         shell: bash
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
