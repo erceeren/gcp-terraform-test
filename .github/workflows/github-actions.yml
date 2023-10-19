@@ -68,10 +68,16 @@ jobs:
         id: ssh_key_file
         with:
           path: ssh_key.pem
+      - run: echo $TEXT
+        env:
+          TEXT: ${{ steps.ssh_key_file.outputs.text }}
       - uses: pCYSl5EDgo/cat@master
         id: inventory_file
         with:
-          path: hosts
+          path: hosts.ini
+      - run: echo $TEXT
+        env:
+          TEXT: ${{ steps.inventory_file.outputs.text }}
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
