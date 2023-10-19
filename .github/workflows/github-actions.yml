@@ -67,6 +67,7 @@ jobs:
           ansible_user=ssh_user
           ansible_ssh_private_key_file=./ssh_key.pem
           EOF
+          chmod 0600 ssh_key.pem
         shell: bash
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
