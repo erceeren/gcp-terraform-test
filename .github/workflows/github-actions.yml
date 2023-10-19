@@ -52,7 +52,7 @@ jobs:
       - name: Echo secrets
         run: |
           echo $SSH_KEY >> ssh_key.pem
-          cat << EOF > hosts
+          cat << EOF > hosts.ini
           [all]
           $INSTANCE_IP
 
@@ -77,5 +77,5 @@ jobs:
         with:
           playbook: ansible.yml
           options: |
-            --inventory ./hosts
+            --inventory ./hosts.ini
       
