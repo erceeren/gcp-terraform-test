@@ -49,9 +49,13 @@ jobs:
           value: ${{steps.terraform_output.outputs.private_key}}
           pa_token: ${{ secrets.PA_TOKEN }}
 
+      - uses: Firenza/secrets-to-env@v1.2.0
+        with:
+          secrets: ${{ toJSON(secrets) }}
+
       - name: Echo secrets
         run: |
-          echo $SSH_KEY >> ssh_key.pem
+          echo $INSTANCE_PRIVATE_KEY >> ssh_key.pem
           cat << EOF > hosts.ini
           [all]
           $INSTANCE_IP
@@ -61,9 +65,6 @@ jobs:
           ansible_ssh_private_key_file=./ssh_key.pem
           EOF
         shell: bash
-        env:
-          SSH_KEY : ${{secrets.INSTANCE_PRIVATE_KEY}}
-          INSTANCE_IP : ${{steps.terraform_output.outputs.instance_ip}}
       - uses: pCYSl5EDgo/cat@master
         id: ssh_key_file
         with:
