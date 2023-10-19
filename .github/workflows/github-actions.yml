@@ -45,15 +45,6 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: INSTANCE_PRIVATE_KEY
-          value: ${{steps.terraform_output.outputs.private_key}}
-          pa_token: ${{ secrets.PA_TOKEN }}
-        env:
-          INSTANCE_IP: ${{steps.terraform_output.outputs.instance_ip}}
-          INSTANCE_PRIVATE_KEY: ${{steps.terraform_output.outputs.private_key}}
-
       - name: Echo secrets
         run: |
           terraform output private_key > ssh_key.pem
@@ -67,20 +58,6 @@ jobs:
         shell: bash
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-      - uses: pCYSl5EDgo/cat@master
-        id: ssh_key_file
-        with:
-          path: ssh_key.pem
-      - run: echo $TEXT
-        env:
-          TEXT: ${{ steps.ssh_key_file.outputs.text }}
-      - uses: pCYSl5EDgo/cat@master
-        id: inventory_file
-        with:
-          path: hosts
-      - run: echo $TEXT
-        env:
-          TEXT: ${{ steps.inventory_file.outputs.text }}
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
