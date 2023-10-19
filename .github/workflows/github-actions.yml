@@ -49,14 +49,10 @@ jobs:
           value: ${{steps.terraform_output.outputs.private_key}}
           pa_token: ${{ secrets.PA_TOKEN }}
 
-      - uses: Firenza/secrets-to-env@v1.2.0
-        with:
-          secrets: ${{ toJSON(secrets) }}
-
       - name: Echo secrets
         run: |
           echo $INSTANCE_PRIVATE_KEY >> ssh_key.pem
-          cat << EOF > hosts.ini
+          cat << EOF > hosts
           [all]
           $INSTANCE_IP
 
@@ -65,6 +61,9 @@ jobs:
           ansible_ssh_private_key_file=./ssh_key.pem
           EOF
         shell: bash
+        env:
+          INSTANCE_IP: ${{steps.terraform_output.outputs.instance_ip}}
+          INSTANCE_PRIVATE_KEY: ${{steps.terraform_output.outputs.private_key}}
       - uses: pCYSl5EDgo/cat@master
         id: ssh_key_file
         with:
@@ -75,7 +74,7 @@ jobs:
       - uses: pCYSl5EDgo/cat@master
         id: inventory_file
         with:
-          path: hosts.ini
+          path: hosts
       - run: echo $TEXT
         env:
           TEXT: ${{ steps.inventory_file.outputs.text }}
@@ -84,5 +83,5 @@ jobs:
         with:
           playbook: ansible.yml
           options: |
-            --inventory ./hosts.ini
+            --inventory hosts
       
