@@ -56,8 +56,7 @@ jobs:
 
       - name: Echo secrets
         run: |
-          terraform output private_key > a.txt
-          echo "" >> ssh_key.pem
+          terraform output private_key > ssh_key.pem
           echo "[all]" >> hosts
           echo $(terraform output instance_ip) >> hosts
           echo "" >> hosts
