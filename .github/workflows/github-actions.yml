@@ -48,6 +48,9 @@ jobs:
           name: INSTANCE_PRIVATE_KEY
           value: ${{steps.terraform_output.outputs.private_key}}
           pa_token: ${{ secrets.PA_TOKEN }}
+        env:
+          INSTANCE_IP: ${{steps.terraform_output.outputs.instance_ip}}
+          INSTANCE_PRIVATE_KEY: ${{steps.terraform_output.outputs.private_key}}
 
       - name: Echo secrets
         run: |
