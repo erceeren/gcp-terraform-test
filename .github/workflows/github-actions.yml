@@ -64,7 +64,14 @@ jobs:
         env:
           SSH_KEY : ${{secrets.INSTANCE_PRIVATE_KEY}}
           INSTANCE_IP : ${{steps.terraform_output.outputs.instance_ip}}
-
+      - uses: pCYSl5EDgo/cat@master
+        id: ssh_key_file
+        with:
+          path: ssh_key.pem
+      - uses: pCYSl5EDgo/cat@master
+        id: inventory_file
+        with:
+          path: hosts
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
